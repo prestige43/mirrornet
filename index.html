@@ -18,6 +18,8 @@
         h2 { font-size: 22px; border-bottom: 2px solid #ff00ff; padding-bottom: 10px; }
         ul { list-style: none; padding: 0; }
         li { padding: 8px 0; font-size: 18px; }
+        a { color: #ff00ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -27,7 +29,7 @@
 
     <div class="search-bar">
         <input type="text" id="search" placeholder="Search products, photos, or videos...">
-        <button onclick="searchFunction()">Search</button>
+        <button onclick="searchAmazon()">Search</button>
     </div>
 
     <div class="container">
@@ -35,9 +37,9 @@
             <h2>Shopping</h2>
             <p>Explore our latest products!</p>
             <ul>
-                <li>Product 1 - $20</li>
-                <li>Product 2 - $30</li>
-                <li>Product 3 - $40</li>
+                <li><a href="https://www.amazon.com/s?k=gaming+mouse" target="_blank">Product 1 - $20</a></li>
+                <li><a href="https://www.amazon.com/s?k=mechanical+keyboard" target="_blank">Product 2 - $30</a></li>
+                <li><a href="https://www.amazon.com/s?k=wireless+headphones" target="_blank">Product 3 - $40</a></li>
             </ul>
         </div>
 
@@ -50,9 +52,13 @@
     </div>
 
     <script>
-        function searchFunction() {
+        function searchAmazon() {
             let query = document.getElementById("search").value;
-            alert("Searching for: " + query);
+            if (query) {
+                window.open(`https://www.amazon.com/s?k=${encodeURIComponent(query)}`, "_blank");
+            } else {
+                alert("Please enter a search term.");
+            }
         }
 
         function uploadFile() {
