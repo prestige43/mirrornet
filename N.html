@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop & Share</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header { background: #333; color: white; padding: 15px; text-align: center; }
+        .search-bar { margin: 20px; text-align: center; }
+        input { padding: 10px; width: 300px; }
+        button { padding: 10px; cursor: pointer; }
+        .container { display: flex; justify-content: space-around; padding: 20px; }
+        .section { width: 45%; padding: 20px; border: 1px solid #ddd; }
+        .gallery img { width: 100px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Shop & Share</h1>
+    </header>
+    
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Search products, photos, or videos...">
+        <button onclick="searchFunction()">Search</button>
+    </div>
+    
+    <div class="container">
+        <div class="section" id="shopping">
+            <h2>Shopping</h2>
+            <p>Explore our latest products!</p>
+            <ul>
+                <li>Product 1 - $20</li>
+                <li>Product 2 - $30</li>
+                <li>Product 3 - $40</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="media">
+            <h2>Share Photos & Videos</h2>
+            <input type="file" id="fileUpload" accept="image/*,video/*">
+            <button onclick="uploadFile()">Upload</button>
+            <div class="gallery" id="gallery"></div>
+        </div>
+    </div>
+    
+    <script>
+        function searchFunction() {
+            let query = document.getElementById("search").value;
+            alert("Searching for: " + query);
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById("fileUpload");
+            const gallery = document.getElementById("gallery");
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileURL = URL.createObjectURL(file);
+                const mediaElement = file.type.startsWith("video") 
+                    ? `<video src="${fileURL}" width="100" controls></video>` 
+                    : `<img src="${fileURL}" width="100">`;
+                gallery.innerHTML += mediaElement;
+            }
+        }
+    </script>
+</body>
+</html>
