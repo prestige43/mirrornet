@@ -17,14 +17,14 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Shop & Share</h1>
+        <h1>Welcome to riftnet</h1>
     </header>
-    
+
     <div class="search-bar">
         <input type="text" id="search" placeholder="Search products, photos, or videos...">
         <button onclick="searchFunction()">Search</button>
     </div>
-    
+
     <div class="container">
         <div class="section" id="shopping">
             <h2>Shopping</h2>
@@ -35,7 +35,7 @@
                 <li>Product 3 - $40</li>
             </ul>
         </div>
-        
+
         <div class="section" id="media">
             <h2>Share Photos & Videos</h2>
             <input type="file" id="fileUpload" accept="image/*,video/*">
@@ -43,7 +43,7 @@
             <div class="gallery" id="gallery"></div>
         </div>
     </div>
-    
+
     <script>
         function searchFunction() {
             let query = document.getElementById("search").value;
@@ -56,8 +56,8 @@
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileURL = URL.createObjectURL(file);
-                const mediaElement = file.type.startsWith("video") 
-                    ? `<video src="${fileURL}" width="100" controls></video>` 
+                const mediaElement = file.type.startsWith("video")
+                    ? `<video src="${fileURL}" width="100" controls></video>`
                     : `<img src="${fileURL}" width="100">`;
                 gallery.innerHTML += mediaElement;
             }
@@ -65,3 +65,33 @@
     </script>
 </body>
 </html>
+
+function uploadFile() {
+    const fileInput = document.getElementById("fileUpload");
+    const gallery = document.getElementById("gallery");
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const fileURL = URL.createObjectURL(file);
+        const mediaElement = file.type.startsWith("video")
+            ? `<video src="${fileURL}" width="100" controls></video>`
+            : `<img src="${fileURL}" width="100">`;
+        gallery.innerHTML += mediaElement;
+
+        // Save to localStorage
+        let savedMedia = JSON.parse(localStorage.getItem("media")) || [];
+        savedMedia.push({ type: file.type, url: fileURL });
+        localStorage.setItem("media", JSON.stringify(savedMedia));
+    }
+}
+
+// Load stored files on page reload
+window.onload = function() {
+    const gallery = document.getElementById("gallery");
+    let savedMedia = JSON.parse(localStorage.getItem("media")) || [];
+    savedMedia.forEach(item => {
+        const mediaElement = item.type.startsWith("video")
+            ? `<video src="${item.url}" width="100" controls></video>`
+            : `<img src="${item.url}" width="100">`;
+        gallery.innerHTML += mediaElement;
+    });
+};
