@@ -15,6 +15,8 @@
         .container { display: flex; justify-content: space-around; flex-wrap: wrap; padding: 20px; }
         .section { width: 45%; padding: 20px; border-radius: 10px; background: #1a1a1a; box-shadow: 0px 4px 10px rgba(255, 0, 255, 0.5); }
         .gallery img, .gallery video { width: 150px; margin: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(255, 0, 255, 0.7); }
+        .gallery-item { position: relative; display: inline-block; }
+        .delete-btn { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; cursor: pointer; padding: 5px; border-radius: 5px; }
         h2 { font-size: 22px; border-bottom: 2px solid #ff00ff; padding-bottom: 10px; }
         ul { list-style: none; padding: 0; }
         li { padding: 8px 0; font-size: 18px; }
@@ -68,28 +70,16 @@
                 const file = fileInput.files[0];
                 const fileURL = URL.createObjectURL(file);
                 const mediaElement = file.type.startsWith("video")
-                    ? `<video src="${fileURL}" width="150" controls></video>`
-                    : `<img src="${fileURL}" width="150">`;
+                    ? `<div class='gallery-item'><video src="${fileURL}" width="150" controls></video><button class='delete-btn' onclick='deleteMedia(this)'>X</button></div>`
+                    : `<div class='gallery-item'><img src="${fileURL}" width="150"><button class='delete-btn' onclick='deleteMedia(this)'>X</button></div>`;
                 gallery.innerHTML += mediaElement;
-
-                // Save to localStorage
-                let savedMedia = JSON.parse(localStorage.getItem("media")) || [];
-                savedMedia.push({ type: file.type, url: fileURL });
-                localStorage.setItem("media", JSON.stringify(savedMedia));
             }
         }
 
-        // Load stored files on page reload
-        window.onload = function() {
-            const gallery = document.getElementById("gallery");
-            let savedMedia = JSON.parse(localStorage.getItem("media")) || [];
-            savedMedia.forEach(item => {
-                const mediaElement = item.type.startsWith("video")
-                    ? `<video src="${item.url}" width="150" controls></video>`
-                    : `<img src="${item.url}" width="150">`;
-                gallery.innerHTML += mediaElement;
-            });
-        };
+        function deleteMedia(button) {
+            const mediaItem = button.parentElement;
+            mediaItem.remove();
+        }
     </script>
 </body>
 </html>
