@@ -1,0 +1,56 @@
+import Web3 from 'web3';
+
+const contractAddress = "YOUR_CONTRACT_ADDRESS"; // Replace with deployed contract address
+const contractABI = [ /* ABI JSON here */ ]; // Replace with contract ABI
+
+let web3;
+let contract;
+let userAccount;
+
+// Initialize Web3
+async function initWeb3() {
+    if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await web3.eth.getAccounts();
+        userAccount = accounts[0];
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+        updateBalance();
+    } else {
+        alert("Please install MetaMask to use this feature.");
+    }
+}
+
+// Get RNT balance of user
+async function updateBalance() {
+    if (contract && userAccount) {
+        const balance = await contract.methods.balanceOf(userAccount).call();
+        document.getElementById("balance").innerText = `Balance: ${web3.utils.fromWei(balance, 'ether')} RNT`;
+    }
+}
+
+// Buy RNT by sending ETH
+async function buyRNT() {
+    const ethAmount = document.getElementById("buyAmount").value;
+    if (ethAmount > 0) {
+        await web3.eth.sendTransaction({
+            from: userAccount,
+            to: contractAddress,
+            value: web3.utils.toWei(ethAmount, 'ether')
+        });
+        updateBalance();
+    }
+}
+
+// Sell RNT by approving and transferring tokens
+async function sellRNT() {
+    const rntAmount = document.getElementById("sellAmount").value;
+    if (rntAmount > 0) {
+        await contract.methods.approve(contractAddress, web3.utils.toWei(rntAmount, 'ether')).send({ from: userAccount });
+        await contract.methods.transfer(contractAddress, web3.utils.toWei(rntAmount, 'ether')).send({ from: userAccount });
+        updateBalance();
+    }
+}
+
+// Connect wallet on page load
+document.addEventListener("DOMContentLoaded", initWeb3);
